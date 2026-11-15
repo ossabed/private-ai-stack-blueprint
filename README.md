@@ -6,7 +6,8 @@ This repository contains the source code and architecture for a sovereign, priva
 
 ## 🚀 Live Interactive Blueprint
 View the fully interactive, animated version here:  
-👉 **[Neo Horizons Live Blueprint](**https://ossabed.github.io/private-ai-stack-blueprint/)
+
+👉 **[Neo Horizons Live Blueprint](https://ossabed.github.io/private-ai-stack-blueprint/)**
 
 *(Replace the link above with your actual GitHub Pages URL)*
 
