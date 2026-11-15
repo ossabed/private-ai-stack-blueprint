@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neo Horizons · Private AI Stack Blueprint</title>
+<meta name="description" content="Own the memory. Rent the intelligence. An interactive architecture blueprint for a private, portable, exit-ready AI stack — one laptop, one memory, every device.">
+<meta property="og:title" content="Neo Horizons · Private AI Stack Blueprint">
+<meta property="og:description" content="Own the memory. Rent the intelligence. Interactive blueprint: private AI workspace, shared memory, zero public ports, exit-ready by design.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#070d1a">
+<style>
+  :root{
+    --bg:#070d1a; --bg2:#0a1224; --panel:#0d1730; --panel2:#111e3c;
+    --ink:#e9effc; --muted:#94a6ca; --faint:#5c6e94;
+    --accent:#38d9ff; --infer:#ffb224; --mem:#f26bff; --backup:#3ddc97; --danger:#ff5d6c;
+    --line:rgba(148,180,255,.22); --radius:16px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",sans-serif;
+    background:var(--bg); color:var(--ink); overflow-x:hidden; line-height:1.5;
+  }
+  ::selection{background:var(--accent); color:#04121c}
+  *{scrollbar-width:thin; scrollbar-color:var(--accent) var(--panel)}
+  ::-webkit-scrollbar{width:10px; height:10px}
+  ::-webkit-scrollbar-track{background:var(--panel)}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--accent),var(--mem)); border-radius:8px; border:2px solid var(--panel)}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+  .aurora{position:fixed; inset:0; z-index:-2; overflow:hidden;
+    background:radial-gradient(1200px 700px at 15% -10%, #12275a 0%, transparent 60%),
+               radial-gradient(1000px 600px at 100% 110%, #2a1140 0%, transparent 55%), var(--bg);}
+  .aurora::before,.aurora::after{content:""; position:absolute; width:52vw; height:52vw; border-radius:50%;
+    filter:blur(90px); opacity:.16; animation:drift 26s ease-in-out infinite alternate;}
+  .aurora::before{background:var(--accent); top:-18vw; left:-12vw}
+  .aurora::after{background:var(--mem); bottom:-20vw; right:-14vw; animation-delay:-13s}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(6vw,4vw) scale(1.15)}}
+  .grain{position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");}
+  nav{position:fixed; top:0; left:0; right:0; z-index:50; height:64px; display:flex; align-items:center; gap:22px;
+    padding:0 26px; background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);}
+  .brand{display:flex; align-items:center; gap:11px; font-weight:800; letter-spacing:.04em; font-size:15px}
+  .brand .mark{width:30px; height:30px; border-radius:9px; display:grid; place-items:center; font-size:15px;
+    background:linear-gradient(135deg,var(--accent),var(--mem)); color:#06101f; box-shadow:0 0 18px color-mix(in srgb,var(--accent) 55%, transparent);}
+  .brand small{display:block; font-weight:500; color:var(--muted); font-size:10.5px; letter-spacing:.14em}
+  nav .links{display:flex; gap:4px; margin-left:8px}
+  nav a.nl{color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; padding:7px 12px; border-radius:9px; transition:.2s}
+  nav a.nl:hover,nav a.nl.active{color:var(--ink); background:var(--panel2)}
+  nav .sp{flex:1}
+  .btn{cursor:pointer; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font:600 12.5px "Segoe UI",sans-serif;
+    padding:9px 14px; border-radius:10px; transition:.18s; display:inline-flex; align-items:center; gap:7px; text-decoration:none;}
+  .btn:hover{transform:translateY(-1px); border-color:var(--accent); box-shadow:0 4px 18px rgba(0,0,0,.35)}
+  .btn:active{transform:translateY(0) scale(.98)}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%, var(--mem))); color:#06101f; border:none; font-weight:800}
+  .btn.ghost{background:transparent}
+  .btn.small{padding:6px 10px; font-size:11.5px; border-radius:8px}
+  main{padding:96px 26px 60px; max-width:1720px; margin:0 auto}
+  section{scroll-margin-top:84px}
+  .head{display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px; margin-bottom:18px}
+  .kicker{font:700 11px/1 ui-monospace,Consolas,monospace; letter-spacing:.22em; color:var(--accent); text-transform:uppercase; margin-bottom:9px}
+  h1{font-size:clamp(24px,3.2vw,40px); font-weight:800; letter-spacing:-.02em; line-height:1.12}
+  h1 em{font-style:normal; background:linear-gradient(90deg,var(--accent),var(--mem)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .sub{color:var(--muted); font-size:14px; max-width:640px; margin-top:8px}
+  .tagline{margin-top:12px; font:800 12px ui-monospace,Consolas,monospace; letter-spacing:.18em; text-transform:uppercase;
+    background:linear-gradient(90deg,var(--accent),var(--mem)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-left:auto}
+  .chip{font:600 11px ui-monospace,Consolas,monospace; padding:6px 11px; border-radius:99px; border:1px solid var(--line); color:var(--muted); background:var(--panel)}
+  .chip b{color:var(--backup)}
+  .workspace{display:grid; grid-template-columns:1fr 300px; gap:18px; align-items:start}
+  .stage-frame{position:relative; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.45); animation:rise .7s ease both;}
+  @keyframes rise{from{opacity:0; transform:translateY(16px)}to{opacity:1; transform:none}}
+  .stage-bar{display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2); font-size:12px; color:var(--muted)}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .stage-bar .hint{margin-left:auto; font:500 11px ui-monospace,monospace; color:var(--faint)}
+  #stage{width:100%; display:block; cursor:grab; touch-action:none; background:transparent}
+  #stage.dragging{cursor:grabbing}
+  .detail{position:absolute; top:58px; right:14px; width:262px; background:color-mix(in srgb,var(--panel) 92%, transparent);
+    backdrop-filter:blur(10px); border:1px solid var(--line); border-radius:13px; padding:14px; font-size:12.5px;
+    box-shadow:0 12px 40px rgba(0,0,0,.4); transition:.25s; pointer-events:none;}
+  .detail h4{font-size:14px; margin-bottom:6px; display:flex; gap:8px; align-items:center}
+  .detail .tag{font:700 10px ui-monospace,monospace; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px}
+  .detail p{color:var(--muted); margin-bottom:7px}
+  .detail .kv{display:flex; gap:6px; font:500 11px ui-monospace,monospace; color:var(--faint); margin-top:4px}
+  .detail .kv b{color:var(--ink); font-weight:600}
+  .rail{position:sticky; top:84px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px; display:flex; flex-direction:column; gap:14px; max-height:calc(100vh - 100px); overflow-y:auto;}
+  .rail h3{font:800 11px ui-monospace,monospace; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; padding-bottom:10px; border-bottom:1px solid var(--line)}
+  .ctl{display:flex; flex-direction:column; gap:6px}
+  .ctl label{font-size:11.5px; font-weight:700; color:var(--muted); display:flex; justify-content:space-between}
+  .ctl label output{color:var(--accent); font:700 11px ui-monospace,monospace}
+  select,input[type=color]{width:100%; background:var(--panel2); color:var(--ink); border:1px solid var(--line); border-radius:9px; padding:8px 10px; font:600 12.5px "Segoe UI",sans-serif; cursor:pointer; outline:none}
+  select:focus{border-color:var(--accent)}
+  input[type=color]{height:38px; padding:4px}
+  input[type=range]{-webkit-appearance:none; width:100%; height:6px; border-radius:6px; background:linear-gradient(90deg,var(--accent),var(--mem)); outline:none; cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:17px; height:17px; border-radius:50%; background:var(--ink); border:3px solid var(--accent); box-shadow:0 0 10px color-mix(in srgb,var(--accent) 60%, transparent); cursor:grab}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--ink);border:3px solid var(--accent);cursor:grab}
+  .toggles{display:grid; grid-template-columns:1fr 1fr; gap:7px}
+  .tg{display:flex; align-items:center; gap:7px; font-size:11.5px; font-weight:600; color:var(--muted); cursor:pointer; background:var(--panel2); border:1px solid var(--line); padding:7px 9px; border-radius:9px; transition:.15s; user-select:none}
+  .tg:hover{border-color:var(--accent)}
+  .tg input{accent-color:var(--accent); cursor:pointer}
+  .tg.on{color:var(--ink); border-color:color-mix(in srgb,var(--accent) 55%, var(--line))}
+  .actions{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .actions .btn{justify-content:center}
+  .rail .note{font-size:10.5px; color:var(--faint); line-height:1.55; border-top:1px solid var(--line); padding-top:10px}
+  .grid2{display:grid; grid-template-columns:1.15fr .85fr; gap:18px; margin-top:44px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:22px; opacity:0; transform:translateY(18px); transition:.6s ease}
+  .card.seen{opacity:1; transform:none}
+  .card h2{font-size:20px; font-weight:800; margin-bottom:4px; letter-spacing:-.01em}
+  .card .lead{color:var(--muted); font-size:13px; margin-bottom:16px}
+  .rec{display:flex; gap:13px; padding:14px; border:1px solid color-mix(in srgb,var(--accent) 45%, var(--line)); border-radius:13px; background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, var(--panel)),var(--panel)); margin-bottom:14px}
+  .rec .ic{width:44px; height:44px; flex:none; border-radius:12px; display:grid; place-items:center; font-size:21px; background:linear-gradient(135deg,var(--accent),var(--mem)); color:#06101f}
+  .rec h3{font-size:15px; margin-bottom:3px}
+  .rec p{font-size:12.5px; color:var(--muted)}
+  .rec code{font:700 12px ui-monospace,monospace; color:var(--accent)}
+  .alt{display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-top:1px solid var(--line); font-size:12.5px}
+  .alt .ic{font-size:17px; margin-top:1px}
+  .alt b{font-size:13px}
+  .alt p{color:var(--muted); margin-top:2px}
+  pre{background:#060b16; border:1px solid var(--line); border-radius:11px; padding:14px; font:12px/1.6 ui-monospace,Consolas,monospace; color:#cfe3ff; overflow-x:auto; position:relative; margin:10px 0}
+  pre .cp{position:absolute; top:8px; right:8px}
+  .step{display:flex; gap:13px; margin-bottom:16px}
+  .step .n{width:30px; height:30px; flex:none; border-radius:50%; display:grid; place-items:center; font:800 13px ui-monospace,monospace; background:linear-gradient(135deg,var(--accent),var(--mem)); color:#06101f}
+  .step h3{font-size:14.5px; margin-bottom:4px}
+  .step p{font-size:12.5px; color:var(--muted)}
+  .why{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px}
+  .why div{background:var(--panel2); border:1px solid var(--line); border-radius:11px; padding:11px; font-size:11.5px; color:var(--muted)}
+  .why b{display:block; color:var(--ink); font-size:12px; margin-bottom:3px}
+  footer{margin-top:46px; padding-top:20px; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+  footer .chip b{color:var(--accent)}
+  footer .sig{margin-left:auto; font:500 11px ui-monospace,monospace; color:var(--faint)}
+  .toast{position:fixed; bottom:24px; left:50%; transform:translate(-50%,80px); background:var(--panel2); border:1px solid var(--accent); color:var(--ink); padding:11px 20px; border-radius:12px; font:600 13px "Segoe UI",sans-serif; box-shadow:0 10px 40px rgba(0,0,0,.5); transition:.3s; z-index:99; opacity:0}
+  .toast.show{transform:translate(-50%,0); opacity:1}
+  @media(max-width:1120px){
+    .workspace{grid-template-columns:1fr}
+    .rail{position:static; max-height:none}
+    .grid2{grid-template-columns:1fr}
+    nav .links{display:none}
+    .detail{width:220px; font-size:11.5px}
+  }
+  @media(max-width:640px){
+    main{padding:84px 14px 40px}
+    .chips{margin-left:0}
+    .why{grid-template-columns:1fr}
+    .detail{display:none}
+    .actions{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body data-theme="midnight">
+<div class="aurora"></div><div class="grain"></div>
+
+<nav>
+  <div class="brand"><div class="mark">◈</div><div>NEO HORIZONS<small>SOVEREIGN AI · BLUEPRINT 01</small></div></div>
+  <div class="links">
+    <a class="nl active" href="#blueprint">Blueprint</a>
+    <a class="nl" href="#mcp">MCP Recommendation</a>
+    <a class="nl" href="#generate">Generate Now</a>
+  </div>
+  <div class="sp"></div>
+  <button class="btn ghost small" onclick="copyShare(this)">⧉ Share caption</button>
+  <button class="btn primary small" onclick="exportSVG()">⬇ Export SVG</button>
+</nav>
+
+<main>
+  <!-- ================= BLUEPRINT ================= -->
+  <section id="blueprint">
+    <div class="head">
+      <div>
+        <div class="kicker">Neo Horizons · Blueprint Series · No. 01</div>
+        <h1>Your <em>Private AI Stack</em>, drawn to scale</h1>
+        <p class="sub">One always-on laptop. One memory. Every device. OpenRouter as the brain, Tailscale as the only door, a NAS as the safety net — rendered live below. Drag to pan, scroll to zoom, hover any component.</p>
+        <div class="tagline">Own the memory · Rent the intelligence</div>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>$0</b> hosting</span>
+        <span class="chip"><b>0</b> public ports</span>
+        <span class="chip">OpenRouter <b>PAYG</b></span>
+        <span class="chip">memory <b>yours</b></span>
+      </div>
+    </div>
+
+    <div class="workspace">
+      <div class="stage-frame">
+        <div class="stage-bar">
+          <span class="dot" style="background:var(--danger)"></span>
+          <span class="dot" style="background:var(--infer)"></span>
+          <span class="dot" style="background:var(--backup)"></span>
+          <span style="font:700 11px ui-monospace,monospace; letter-spacing:.12em">LIVE BLUEPRINT · 1520 × 960</span>
+          <span class="hint">drag = pan · wheel = zoom · click = pin details</span>
+        </div>
+        <svg id="stage" viewBox="0 0 1520 960" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Neo Horizons private AI stack architecture diagram"></svg>
+        <div class="detail" id="detail">
+          <div class="tag">Component inspector</div>
+          <h4>◈ Hover the blueprint</h4>
+          <p>Every node carries its real role, port, and privacy posture. Click to pin it here.</p>
+          <div class="kv"><span>Stack:</span><b>Open WebUI + OpenClaw + OpenMemory</b></div>
+          <div class="kv"><span>Access:</span><b>Tailscale only</b></div>
+        </div>
+      </div>
+
+      <aside class="rail">
+        <h3>◈ Blueprint Controls</h3>
+        <div class="ctl"><label>Theme</label>
+          <select id="cTheme"><option value="midnight">Midnight Blueprint</option><option value="paper">Daylight Paper</option><option value="terminal">Terminal Green</option></select></div>
+        <div class="ctl"><label>Primary accent</label><input type="color" id="cAccent" value="#38d9ff"></div>
+        <div class="ctl"><label>Zoom <output id="oZoom">100%</output></label><input type="range" id="cZoom" min="50" max="200" value="100"></div>
+        <div class="ctl"><label>Line weight <output id="oStroke">2.0</output></label><input type="range" id="cStroke" min="1" max="3.5" step="0.25" value="2"></div>
+        <div class="ctl"><label>Corner radius <output id="oRadius">14</output></label><input type="range" id="cRadius" min="4" max="24" value="14"></div>
+        <div class="ctl"><label>Label density</label>
+          <select id="cDensity"><option value="full">Full · ports &amp; notes</option><option value="compact">Compact · titles only</option></select></div>
+        <div class="ctl"><label>Layers</label>
+          <div class="toggles">
+            <label class="tg on"><input type="checkbox" id="lGrid" checked>Grid</label>
+            <label class="tg on"><input type="checkbox" id="lAnim" checked>Flow motion</label>
+            <label class="tg on"><input type="checkbox" id="lLabels" checked>Flow labels</label>
+            <label class="tg on"><input type="checkbox" id="lBackup" checked>Backup</label>
+            <label class="tg on"><input type="checkbox" id="lPersonal" checked>Personal lane</label>
+            <label class="tg on"><input type="checkbox" id="lPrivacy" checked>Privacy badges</label>
+            <label class="tg on" style="grid-column:1/-1"><input type="checkbox" id="lBrand" checked>Neo Horizons brand mark</label>
+          </div></div>
+        <div class="actions">
+          <button class="btn" onclick="resetAll()">↺ Reset</button>
+          <button class="btn" onclick="shuffle()">⚄ Shuffle</button>
+          <button class="btn primary" onclick="exportSVG()">⬇ SVG</button>
+          <button class="btn primary" onclick="exportPNG()">⬇ PNG 2×</button>
+          <button class="btn" onclick="copySVG()">⧉ Copy SVG</button>
+          <button class="btn" onclick="copyMermaid(this)">⧉ Mermaid</button>
+          <button class="btn" onclick="copyPrompt(this)">⧉ MCP prompt</button>
+          <button class="btn" onclick="copyShare(this)">⧉ Caption</button>
+        </div>
+        <div class="note">Exports carry the <b>Neo Horizons</b> mark (toggle under Layers). SVG stays vector for decks &amp; docs; PNG is 3040×1920, ready for social. <b>Caption</b> copies a ready-to-post share text.</div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= MCP + GENERATE ================= -->
+  <div class="grid2">
+    <section class="card" id="mcp">
+      <div class="kicker">Recommendation</div>
+      <h2>Use a Mermaid MCP — text in, diagram out</h2>
+      <p class="lead">A serious stack deserves a diagram that lives as <b>text in your canonical files</b>, not as a binary someone else hosts. That makes it versioned, diffable, and regenerable from any client.</p>
+      <div class="rec">
+        <div class="ic">◈</div>
+        <div>
+          <h3>Primary: <code>mcp-mermaid</code></h3>
+          <p>Runs locally via <code>npx</code>, renders Mermaid → <b>PNG / SVG</b>, and works in OpenClaw, Qwen Desktop, and Chatbox. Deterministic, offline-friendly, zero new cloud dependency — the right default for a privacy-first stack.</p>
+        </div>
+      </div>
+      <div class="alt"><span class="ic">⬡</span><div><b>Kroki-based MCP</b><p>One endpoint for PlantUML, D2, GraphViz and more — pick it when you need UML sequence or C4-style views.</p></div></div>
+      <div class="alt"><span class="ic">✎</span><div><b>Excalidraw MCP</b><p>Hand-drawn workshop style — good for whiteboard sessions and pitch storytelling, weaker for precise architecture.</p></div></div>
+      <div class="alt"><span class="ic">⚡</span><div><b>This page</b><p>Already rendered, zero dependencies, fully offline. Export above for an immediate deck-ready asset — no MCP required for <i>now</i>.</p></div></div>
+      <div class="why">
+        <div><b>Canonical</b>Diagram-as-code lives beside your Markdown + git source of truth.</div>
+        <div><b>Portable</b>Same source renders in any MCP client, on any OS.</div>
+        <div><b>Private</b>Rendering happens on your machine; nothing new leaves it.</div>
+      </div>
+    </section>
+
+    <section class="card" id="generate">
+      <div class="kicker">Generate it now</div>
+      <h2>Three steps, ninety seconds</h2>
+      <p class="lead">You already have the drawing. To make it reproducible inside your agents, wire the MCP once and reuse the prompt forever.</p>
+      <div class="step"><div class="n">1</div><div><h3>Add the server to your MCP client</h3><p>OpenClaw, Qwen Desktop (MCP → Add → JSON), or Chatbox. On Windows desktop apps, use the full <code>npx.cmd</code> path if plain <code>npx</code> fails.</p></div></div>
+      <pre><button class="btn small cp" onclick="copyText('cfg',this)">⧉ copy</button><code id="cfg"></code></pre>
+      <div class="step"><div class="n">2</div><div><h3>Paste the generation prompt</h3><p>The full prompt already embeds the exact architecture below — nodes, ports, lanes and privacy notes included.</p></div></div>
+      <div class="actions" style="grid-template-columns:1fr 1fr; margin-bottom:16px">
+        <button class="btn primary" onclick="copyPrompt(this)">⧉ Copy full MCP prompt</button>
+        <button class="btn" onclick="copyMermaid(this)">⧉ Copy Mermaid only</button>
+      </div>
+      <div class="step"><div class="n">3</div><div><h3>Save the output into your project space</h3><p>Drop the PNG/SVG into your Open WebUI project knowledge base and commit the Mermaid source to git — the drawing now regenerates from any device, forever.</p></div></div>
+      <pre style="max-height:220px"><button class="btn small cp" onclick="copyMermaid(this)">⧉ copy</button><code id="mermaidPre"></code></pre>
+    </section>
+  </div>
+
+  <footer>
+    <span class="chip"><b>🔒</b> tailnet-only</span>
+    <span class="chip"><b>🚫</b> logging OFF</span>
+    <span class="chip"><b>🧠</b> no-training routing + ZDR</span>
+    <span class="chip"><b>✉️</b> vendor opt-out set</span>
+    <span class="chip"><b>💾</b> encrypted backups</span>
+    <span class="chip"><b>💬</b> E2E channels preferred</span>
+    <button class="btn small" onclick="copyShare(this)">⧉ Copy share caption</button>
+    <span class="sig">NEO HORIZONS · OWN THE MEMORY · RENT THE INTELLIGENCE</span>
+  </footer>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================ DATA ============================ */
+const THEMES = {
+  midnight:{bg:'#070d1a',panel:'#0d1730',panel2:'#111e3c',ink:'#e9effc',muted:'#94a6ca',faint:'#5c6e94',
+    grid:'rgba(96,165,250,.08)',zone:'rgba(148,180,255,.06)',zoneStroke:'rgba(148,180,255,.30)',
+    access:'#38d9ff',infer:'#ffb224',mem:'#f26bff',backup:'#3ddc97',channel:'#7cf2b0',personal:'#8fa3c8',danger:'#ff5d6c',
+    node:'#0f1b36',nodeStroke:'rgba(148,180,255,.32)',chip:'#16264a'},
+  paper:{bg:'#f2efe6',panel:'#ffffff',panel2:'#f7f4ec',ink:'#1c2733',muted:'#5b6b7c',faint:'#8b98a6',
+    grid:'rgba(28,80,120,.09)',zone:'rgba(28,80,120,.045)',zoneStroke:'rgba(28,80,120,.30)',
+    access:'#0e7490',infer:'#b45309',mem:'#a21caf',backup:'#047857',channel:'#0f766e',personal:'#64748b',danger:'#b91c1c',
+    node:'#ffffff',nodeStroke:'rgba(28,80,120,.30)',chip:'#eef0e9'},
+  terminal:{bg:'#031007',panel:'#071b0e',panel2:'#0a2413',ink:'#d9ffe6',muted:'#8fd3a4',faint:'#4e8a63',
+    grid:'rgba(61,220,151,.09)',zone:'rgba(61,220,151,.05)',zoneStroke:'rgba(61,220,151,.30)',
+    access:'#3ddc97',infer:'#ffd166',mem:'#66e0ff',backup:'#a3ff6b',channel:'#3ddc97',personal:'#7ba889',danger:'#ff6b6b',
+    node:'#0a2013',nodeStroke:'rgba(61,220,151,.32)',chip:'#0e2c1a'}
+};
+const DEFAULTS = {theme:'midnight',accent:'#38d9ff',zoom:1,pan:{x:0,y:0},stroke:2,radius:14,density:'full',
+  layers:{grid:true,anim:true,labels:true,backup:true,personal:true,privacy:true,brand:true}};
+let S = JSON.parse(JSON.stringify(DEFAULTS));
+let pinned = null, suppressClick = false;
+
+const ZONES = [
+  {id:'devices',x:36,y:150,w:252,h:600,label:'ANY DEVICE · ANYWHERE',sub:'any OS · any browser'},
+  {id:'tailnet',x:330,y:150,w:152,h:420,label:'TAILSCALE MESH',sub:'WireGuard · tailnet-only'},
+  {id:'laptop',x:520,y:88,w:522,h:792,label:'LAPTOP · ALWAYS ON',sub:'Windows 11 host · Hyper-V'},
+  {id:'vm',x:544,y:148,w:474,h:648,label:'UBUNTU VM · DOCKER',sub:''},
+  {id:'cloud',x:1090,y:150,w:392,h:384,label:'EXTERNAL · PAY AS YOU GO',sub:''},
+  {id:'naszone',x:1090,y:600,w:392,h:210,label:'BACKUP · OFF THE VM',sub:'',layer:'backup'}
+];
+const NODES = [
+  {id:'win',x:58,y:198,w:208,h:88,icon:'🖥️',title:'Windows desktop',sub:'Qwen Desktop + MCP · Browser/PWA',kind:'access',
+    detail:{role:'The main workstation. Qwen Desktop attaches to OpenMemory through its local MCP bridge; any browser reaches Open WebUI over the tailnet.',ports:'Qwen Desktop MCP · browser :8080',privacy:'The personal Qwen lane stays separate from project work.',note:'Tailscale on the Windows host is enough for desktop MCP.'}},
+  {id:'phone',x:58,y:330,w:208,h:88,icon:'📱',title:'Android / any phone',sub:'Open WebUI PWA · Tailscale app',kind:'access',
+    detail:{role:'Install the Open WebUI PWA (Add to Home screen) or a native client. Same projects, same server-side chat history as desktop.',ports:'Tailscale Android · HTTPS via Serve',privacy:'All traffic stays inside the private tailnet.',note:'Works while the host machine is awake — the homelab trade-off.'}},
+  {id:'wa',x:58,y:598,w:208,h:88,icon:'💬',title:'WhatsApp',sub:'E2E channel to the agent',kind:'channel',
+    detail:{role:'Message the OpenClaw agent from an app you already use. Preferred over Telegram because regular chats are end-to-end encrypted.',ports:'OpenClaw channel · linked device',privacy:'E2E in transit; agent state stays on the laptop.',note:'Cross-channel session relay with the Control UI is a known open gap.'}},
+  {id:'serve',x:344,y:296,w:124,h:128,icon:'🛡️',title:'Tailscale Serve',sub:'HTTPS · *.ts.net',kind:'access',small:true,
+    detail:{role:'The only door into the stack. Gives Open WebUI, OpenClaw and the OpenMemory dashboard clean HTTPS names on the tailnet.',ports:'443 → local services',privacy:'No public inbound ports. WireGuard-encrypted mesh.',note:'Keep the same hostname when the stack later moves VM → mini-PC.'}},
+  {id:'owui',x:568,y:188,w:426,h:94,icon:'🗂️',title:'Open WebUI',port:':8080',sub:'Projects · Spaces · server-side chat history',kind:'access',
+    detail:{role:'The Projects/Spaces home: folders with default model, system prompt and attached knowledge. Every conversation lives here, so any device sees the same threads.',ports:':8080 (remapped from :3000 to avoid OpenMemory UI clash)',privacy:'Self-hosted; histories never leave the VM.',note:'PWA installs on phone, tablet and desktop.'}},
+  {id:'oclaw',x:568,y:330,w:426,h:94,icon:'🤖',title:'OpenClaw Gateway',port:':18789',sub:'Agents · automation · channels · OpenAI-compat API',kind:'channel',
+    detail:{role:'The agent runtime: automation, WhatsApp channel, and an OpenAI-compatible endpoint so Chatbox or Open WebUI can use the whole agent as a “model”.',ports:':18789 · gateway auth ON',privacy:'Keep the gateway Tailscale-only; enable auth.',note:'Provider = OpenRouter PAYG; swappable to any other API later.'}},
+  {id:'omem',x:568,y:472,w:426,h:94,icon:'🧠',title:'OpenMemory MCP',port:':8765',sub:'Shared facts · dashboard :3000',kind:'mem',
+    detail:{role:'One memory across Open WebUI, OpenClaw, Qwen Desktop and Chatbox. Facts are shared; transcripts stay in their own apps.',ports:'MCP SSE :8765 · dashboard :3000',privacy:'Local storage; you own the vectors and the text.',note:'Per-client SSE paths give per-app access control.'}},
+  {id:'files',x:568,y:616,w:426,h:76,icon:'📄',title:'Canonical files',sub:'Markdown + git · Syncthing mirror',kind:'backup',
+    detail:{role:'The source of truth: profile, decisions, project notes as plain Markdown in private git. Every memory service is a disposable index over these files.',ports:'git · Syncthing',privacy:'Text is the asset; vectors are cache.',note:'Re-ingest into any backend on an afternoon’s notice.'}},
+  {id:'orouter',x:1114,y:198,w:344,h:92,icon:'🔀',title:'OpenRouter',port:'PAYG',sub:'no-training routing · ZDR · logging OFF',kind:'infer',
+    detail:{role:'The brain: one key, 600+ models including the full Qwen family. Pay only for what you use; set a monthly spend cap.',ports:'HTTPS API · one key',privacy:'Disallow training providers · enforce ZDR · input/output logging OFF.',note:'Commercial use is legitimate here; consumer chat apps stay personal.'}},
+  {id:'models',x:1114,y:330,w:344,h:72,icon:'✨',title:'Qwen · Claude · 600+ models',sub:'one API key',kind:'infer',
+    detail:{role:'Swap models per task without touching memory, tools or history. One family for daily work, others for comparison.',ports:'via OpenRouter',privacy:'Provider policy enforced by your routing settings.',note:'Free-tier models available for experiments (daily caps).'}},
+  {id:'qcloud',x:1114,y:428,w:344,h:84,icon:'☁️',title:'Qwen free app cloud',sub:'personal lane · separate account memory',kind:'personal',layer:'personal',
+    detail:{role:'The consumer Qwen app/web keeps its own account memory and chat sync. Useful for personal chat; it cannot merge into self-hosted project history.',ports:'consumer app · no MCP on mobile/web',privacy:'Set the vendor training opt-out · feedback ratings exempt · personal-use terms.',note:'Bridge to project work via canonical exports only.'}},
+  {id:'nas',x:1114,y:648,w:344,h:98,icon:'🗄️',title:'UGREEN NAS DH2300',sub:'nightly encrypted tar · rsync · restore drills',kind:'backup',layer:'backup',
+    detail:{role:'Backup target, not a Docker host (DH2300 has no official Docker support). Pulls the nightly archive; a second copy lives on the laptop = 3-2-1.',ports:'rsync · Sync & Backup',privacy:'Encrypt the archive before it leaves the VM.',note:'Test one restore on the laptop — a backup you never restore is a hope.'}}
+];
+const EDGES = [
+  {from:'win',to:'serve',kind:'access',d:'M266,242 C304,242 306,340 344,340'},
+  {from:'phone',to:'serve',kind:'access',d:'M266,374 C304,374 306,372 344,372'},
+  {from:'serve',to:'owui',kind:'access',d:'M468,330 C516,330 520,235 568,235'},
+  {from:'serve',to:'oclaw',kind:'access',d:'M468,362 C516,362 520,377 568,377'},
+  {from:'serve',to:'omem',kind:'access',d:'M468,394 C516,394 520,505 568,505'},
+  {from:'wa',to:'oclaw',kind:'channel',bidir:true,d:'M266,642 C360,706 520,600 568,400',label:'E2E channel',lx:416,ly:678},
+  {from:'owui',to:'orouter',kind:'infer',d:'M994,235 C1054,235 1056,244 1114,244',label:'inference',lx:1054,ly:222},
+  {from:'oclaw',to:'orouter',kind:'infer',d:'M994,377 C1054,377 1058,262 1114,262'},
+  {from:'orouter',to:'models',kind:'infer',d:'M1286,290 L1286,330'},
+  {from:'owui',to:'omem',kind:'mem',d:'M606,282 C556,300 556,452 606,472',label:'MCP',lx:536,ly:380},
+  {from:'oclaw',to:'omem',kind:'mem',d:'M640,424 C616,446 616,452 640,472'},
+  {from:'win',to:'omem',kind:'mem',d:'M162,198 C162,74 320,64 532,64 L532,506 C532,520 548,533 568,533',label:'local MCP bridge',lx:330,ly:54},
+  {from:'win',to:'qcloud',kind:'personal',dashed:true,d:'M240,198 C240,30 1468,22 1468,60 L1468,462 C1468,472 1462,470 1458,470',label:'personal chat · own memory',lx:850,ly:26,layer:'personal'},
+  {from:'files',to:'nas',kind:'backup',d:'M994,654 C1054,654 1058,690 1114,690',label:'nightly · encrypted',lx:1050,ly:640,layer:'backup'},
+  {from:'files',to:'nas',kind:'backup',dashed:true,d:'M994,676 C1044,700 1060,722 1114,722',label:'Syncthing',lx:1050,ly:714,layer:'backup'}
+];
+const BADGES = [
+  {x:330,y:128,w:152,text:'🔐 WireGuard E2E',kind:'access'},
+  {x:1090,y:128,w:210,text:'🚫 training off · ZDR · logs off',kind:'infer'},
+  {x:520,y:884,w:250,text:'⛔ no inbound public ports — tailnet only',kind:'danger'},
+  {x:1114,y:514,w:172,text:'🔒 opt-out set · personal use',kind:'personal'}
+];
+const LEGEND = [
+  {kind:'access',label:'Private access'},{kind:'infer',label:'Inference'},{kind:'mem',label:'MCP memory'},
+  {kind:'backup',label:'Backup / sync'},{kind:'channel',label:'Agent channel'},{kind:'personal',label:'Personal lane'}
+];
+const MERMAID = `flowchart TB
+  subgraph DEVICES["Any device · anywhere"]
+    WIN["Windows desktop<br/>Qwen Desktop + MCP · Browser/PWA"]
+    PHONE["Android / any phone<br/>Open WebUI PWA · Tailscale"]
+    WA["WhatsApp<br/>E2E channel"]
+  end
+  subgraph TAILNET["Tailscale mesh · WireGuard · no public ports"]
+    SERVE["Tailscale Serve<br/>HTTPS on *.ts.net"]
+  end
+  subgraph LAPTOP["Laptop · always on · Windows host"]
+    subgraph VM["Hyper-V → Ubuntu VM · Docker"]
+      OWUI["Open WebUI :8080<br/>Projects · Spaces · chat history"]
+      OCLAW["OpenClaw :18789<br/>Agents · channels · OpenAI-compat API"]
+      OMEM["OpenMemory :8765<br/>MCP memory · UI :3000"]
+      FILES["Canonical files<br/>Markdown + git · Syncthing"]
+    end
+  end
+  subgraph CLOUD["External · pay as you go"]
+    OROUTER["OpenRouter<br/>no-training routing · ZDR · logging OFF"]
+    MODELS["Qwen · Claude · 600+ models"]
+    QPERSONAL["Qwen free app cloud<br/>personal lane · own memory"]
+  end
+  NAS["UGREEN NAS DH2300<br/>nightly encrypted backup · restore drills"]
+
+  WIN --> SERVE
+  PHONE --> SERVE
+  SERVE --> OWUI
+  SERVE --> OCLAW
+  SERVE --> OMEM
+  WA <--> OCLAW
+  OWUI -->|inference| OROUTER
+  OCLAW -->|inference| OROUTER
+  OROUTER --> MODELS
+  OWUI -->|MCP| OMEM
+  OCLAW -->|MCP| OMEM
+  WIN -->|local MCP| OMEM
+  WIN -.->|personal chat| QPERSONAL
+  FILES -->|nightly tar + rsync| NAS
+  FILES -.->|Syncthing| NAS`;
+const CFG = `{
+  "mcpServers": {
+    "mermaid": {
+      "command": "npx",
+      "args": ["-y", "mcp-mermaid"]
+    }
+  }
+}`;
+const PROMPT = `Use the mermaid MCP server (generate_mermaid_diagram) to render this architecture diagram. Return (1) a high-resolution PNG with a dark theme and (2) the SVG source. Keep every node, subgraph, edge and label exactly as written — do not simplify or rename anything.
+
+Mermaid source:
+
+${MERMAID}`;
+const SHARE = `Your AI remembers your strategy, your clients, your numbers. Who owns that memory?
+
+Own the memory. Rent the intelligence.
+One laptop. One memory. Every device. Zero public ports. Hosting cost: $0.
+
+Interactive blueprint · Neo Horizons 👇
+
+#AIArchitecture #DataPrivacy #AIGovernance #SelfHosted #DigitalTransformation`;
+
+/* ============================ HELPERS ============================ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const T = () => THEMES[S.theme];
+const accent = () => S.accent;
+const kindColor = k => k==='access' ? accent() : (T()[k]||T().muted);
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+async function copyRaw(text,msg,btn){
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast(msg||'Copied to clipboard ✓');
+  if(btn){ const old=btn.innerHTML; btn.innerHTML='✓ Copied'; setTimeout(()=>btn.innerHTML=old,1400); }
+}
+function download(name,blob){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); }
+
+/* ============================ RENDER ============================ */
+function render(){
+  const t=T(), A=accent(), full=S.density==='full';
+  document.body.dataset.theme=S.theme;
+  const r=document.documentElement.style;
+  r.setProperty('--bg',t.bg); r.setProperty('--bg2',t.panel); r.setProperty('--panel',t.panel); r.setProperty('--panel2',t.panel2);
+  r.setProperty('--ink',t.ink); r.setProperty('--muted',t.muted); r.setProperty('--faint',t.faint);
+  r.setProperty('--accent',A); r.setProperty('--infer',t.infer); r.setProperty('--mem',t.mem); r.setProperty('--backup',t.backup);
+  r.setProperty('--danger',t.danger); r.setProperty('--line',t.zoneStroke);
+  let out = `<defs>
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="${t.grid}" stroke-width="1"/></pattern>
+    ${['access','infer','mem','backup','channel','personal','danger'].map(k=>`<marker id="arr-${k}" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${kindColor(k)}"/></marker>`).join('')}
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#000" flood-opacity=".35"/></filter>
+  </defs>
+  <style>
+    text{font-family:"Segoe UI",system-ui,sans-serif}
+    .mono{font-family:ui-monospace,Consolas,monospace}
+    .zone{fill:${t.zone}; stroke:${t.zoneStroke}; stroke-width:1.2}
+    .node .box{fill:${t.node}; stroke:${t.nodeStroke}; stroke-width:1.3; transition:.18s}
+    .node{cursor:pointer}
+    .node:hover .box{stroke:${A}; stroke-width:2}
+    .edge{fill:none; stroke-linecap:round; transition:opacity .2s}
+    .dim{opacity:.14}
+    .hot{opacity:1; filter:drop-shadow(0 0 6px ${A})}
+    ${S.layers.anim?`.flow{stroke-dasharray:7 8; animation:dash 1.15s linear infinite}@keyframes dash{to{stroke-dashoffset:-30}}`:''}
+    .lbl{paint-order:stroke; stroke:${t.bg}; stroke-width:5px; stroke-linejoin:round}
+  </style>
+  <rect width="1520" height="960" fill="${t.bg}"/>
+  ${S.layers.grid?`<rect width="1520" height="960" fill="url(#grid)"/>`:''}
+  <g id="world" transform="translate(${S.pan.x} ${S.pan.y}) scale(${S.zoom})">`;
+
+  for(const z of ZONES){
+    if(z.layer && !S.layers[z.layer]) continue;
+    out += `<g data-zone="${z.id}"><rect class="zone" x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="${S.radius+4}" ${z.id==='vm'||z.id==='tailnet'?'stroke-dasharray="5 5"':''}/>
+      <text x="${z.x+14}" y="${z.y+22}" fill="${t.faint}" font-size="10.5" font-weight="800" letter-spacing="1.6" class="mono">${esc(z.label)}</text>
+      ${z.sub&&full?`<text x="${z.x+14}" y="${z.y+37}" fill="${t.faint}" font-size="9.5" class="mono">${esc(z.sub)}</text>`:''}</g>`;
+  }
+  for(const e of EDGES){
+    if(e.layer && !S.layers[e.layer]) continue;
+    const c=kindColor(e.kind), w=S.stroke*(e.kind==='infer'?1.15:1);
+    const cls='edge'+((!e.dashed&&S.layers.anim)?' flow':'');
+    out += `<path class="${cls}" data-edge data-from="${e.from}" data-to="${e.to}" d="${e.d}" stroke="${c}" stroke-width="${w}" ${e.dashed?'stroke-dasharray="4 7"':''} marker-end="url(#arr-${e.kind})" ${e.bidir?'marker-start="url(#arr-'+e.kind+')"':''}/>`;
+    if(e.label && S.layers.labels && full){
+      out += `<text class="lbl mono" x="${e.lx}" y="${e.ly}" fill="${c}" font-size="10.5" font-weight="700" text-anchor="middle">${esc(e.label)}</text>`;
+    }
+  }
+  for(const n of NODES){
+    if(n.layer && !S.layers[n.layer]) continue;
+    const c=kindColor(n.kind), compact=!full;
+    const titleSize=n.small?12.5:15, iconSize=n.small?20:22;
+    out += `<g class="node" data-node="${n.id}" filter="url(#soft)">
+      <rect class="box" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="${S.radius}"/>
+      <rect x="${n.x}" y="${n.y}" width="4.5" height="${n.h}" rx="2" fill="${c}"/>
+      <text x="${n.x+16}" y="${n.y+(n.small?34:38)}" font-size="${iconSize}">${n.icon}</text>`;
+    if(n.small){
+      out += `<text x="${n.x+16}" y="${n.y+60}" fill="${t.ink}" font-size="${titleSize}" font-weight="800">${esc(n.title)}</text>
+        ${compact?'':`<text x="${n.x+16}" y="${n.y+78}" fill="${t.muted}" font-size="10" class="mono">${esc(n.sub)}</text>`}
+        <text x="${n.x+16}" y="${n.y+104}" fill="${c}" font-size="9.5" font-weight="800" class="mono">TAILNET ONLY</text>`;
+    } else {
+      const tx=n.x+52;
+      out += `<text x="${tx}" y="${n.y+34}" fill="${t.ink}" font-size="${titleSize}" font-weight="800">${esc(n.title)}</text>`;
+      if(n.port && full) out += `<rect x="${n.x+n.w-64}" y="${n.y+14}" width="50" height="19" rx="6" fill="${t.chip}" stroke="${c}" stroke-opacity=".5"/><text x="${n.x+n.w-39}" y="${n.y+27}" fill="${c}" font-size="10" font-weight="800" text-anchor="middle" class="mono">${esc(n.port)}</text>`;
+      if(!compact) out += `<text x="${tx}" y="${n.y+56}" fill="${t.muted}" font-size="11.5">${esc(n.sub)}</text>`;
+      if(n.id==='files' && full) out += `<text x="${tx}" y="${n.y+71}" fill="${t.faint}" font-size="9.5" class="mono">source of truth · re-ingest anywhere</text>`;
+    }
+    out += `</g>`;
+  }
+  if(S.layers.privacy){
+    for(const b of BADGES){
+      const c=kindColor(b.kind);
+      out += `<g><rect x="${b.x}" y="${b.y}" width="${b.w}" height="22" rx="11" fill="${t.panel}" stroke="${c}" stroke-opacity=".65"/><text x="${b.x+b.w/2}" y="${b.y+15}" fill="${c}" font-size="9.5" font-weight="800" text-anchor="middle" class="mono">${esc(b.text)}</text></g>`;
+    }
+    out += `<path d="M498,820 L520,820" stroke="${t.danger}" stroke-width="${S.stroke}" stroke-dasharray="3 4"/><circle cx="489" cy="820" r="9" fill="none" stroke="${t.danger}" stroke-width="2"/><path d="M483,826 L495,814" stroke="${t.danger}" stroke-width="2"/>`;
+  }
+  if(S.layers.brand){
+    out += `<text x="36" y="46" fill="${A}" font-size="14" font-weight="800" letter-spacing="2.5" class="mono">◈ NEO HORIZONS</text>
+      <text x="36" y="62" fill="${t.faint}" font-size="8.5" letter-spacing="1.4" class="mono">OWN THE MEMORY · RENT THE INTELLIGENCE</text>`;
+  }
+  let lx=36;
+  out += `<g>`;
+  for(const l of LEGEND){
+    const c=kindColor(l.kind);
+    out += `<line x1="${lx}" y1="932" x2="${lx+26}" y2="932" stroke="${c}" stroke-width="${S.stroke}" ${l.kind==='personal'?'stroke-dasharray="4 5"':''}/><text x="${lx+33}" y="936" fill="${t.muted}" font-size="10.5" font-weight="600">${esc(l.label)}</text>`;
+    lx += 33 + l.label.length*6.4 + 34;
+  }
+  out += `<text x="1484" y="936" fill="${t.faint}" font-size="9.5" text-anchor="end" class="mono">${S.layers.brand?'NEO HORIZONS · ':''}BLUEPRINT 01 · ${new Date().toISOString().slice(0,10)}</text></g>`;
+  out += `</g>`;
+  $('stage').innerHTML = out;
+  applyTransform();
+  if(pinned) highlight(pinned);
+}
+function applyTransform(){ const w=$('world'); if(w) w.setAttribute('transform',`translate(${S.pan.x} ${S.pan.y}) scale(${S.zoom})`); $('oZoom').textContent=Math.round(S.zoom*100)+'%'; $('cZoom').value=Math.round(S.zoom*100); }
+
+/* ============================ INTERACTION ============================ */
+function connected(id){ const set=new Set([id]); for(const e of EDGES){ if(e.layer&&!S.layers[e.layer])continue; if(e.from===id)set.add(e.to); if(e.to===id)set.add(e.from);} return set; }
+function highlight(id){
+  const keep=connected(id);
+  document.querySelectorAll('#stage [data-node]').forEach(n=>n.classList.toggle('dim',!keep.has(n.dataset.node)));
+  document.querySelectorAll('#stage [data-edge]').forEach(e=>{ const hot=e.dataset.from===id||e.dataset.to===id; e.classList.toggle('hot',hot); e.classList.toggle('dim',!hot); });
+}
+function clearHighlight(){ document.querySelectorAll('#stage .dim,#stage .hot').forEach(el=>el.classList.remove('dim','hot')); }
+function showDetail(id){
+  const n=NODES.find(x=>x.id===id); if(!n) return;
+  const d=n.detail, c=kindColor(n.kind);
+  $('detail').innerHTML=`<div class="tag" style="color:${c}">${esc(n.kind)} layer</div><h4>${n.icon} ${esc(n.title)}</h4>
+    <p>${esc(d.role)}</p><div class="kv"><span>Ports:</span><b>${esc(d.ports)}</b></div>
+    <div class="kv"><span>Privacy:</span><b>${esc(d.privacy)}</b></div><div class="kv"><span>Note:</span><b>${esc(d.note)}</b></div>`;
+}
+function defaultDetail(){ $('detail').innerHTML=`<div class="tag">Component inspector</div><h4>◈ Hover the blueprint</h4><p>Every node carries its real role, port, and privacy posture. Click to pin it here.</p><div class="kv"><span>Stack:</span><b>Open WebUI + OpenClaw + OpenMemory</b></div><div class="kv"><span>Access:</span><b>Tailscale only</b></div>`; }
+
+const svg=$('stage');
+svg.addEventListener('mouseover',e=>{ const n=e.target.closest('[data-node]'); if(n&&!pinned){ highlight(n.dataset.node); showDetail(n.dataset.node);} });
+svg.addEventListener('mouseout',e=>{ const n=e.target.closest('[data-node]'); if(n&&!pinned){ clearHighlight(); defaultDetail(); } });
+svg.addEventListener('click',e=>{
+  if(suppressClick){ suppressClick=false; return; }
+  const n=e.target.closest('[data-node]');
+  if(n){ pinned=n.dataset.node; highlight(pinned); showDetail(pinned); }
+  else { pinned=null; clearHighlight(); defaultDetail(); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ pinned=null; clearHighlight(); defaultDetail(); }});
+
+let drag=null;
+svg.addEventListener('pointerdown',e=>{ if(e.button!==0)return; drag={x:e.clientX,y:e.clientY,moved:false}; svg.setPointerCapture(e.pointerId); svg.classList.add('dragging'); });
+svg.addEventListener('pointermove',e=>{ if(!drag)return; const r=svg.getBoundingClientRect();
+  const dx=(e.clientX-drag.x)/r.width*1520, dy=(e.clientY-drag.y)/r.height*960;
+  if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>4) drag.moved=true;
+  S.pan.x+=dx; S.pan.y+=dy; drag.x=e.clientX; drag.y=e.clientY; applyTransform(); });
+svg.addEventListener('pointerup',e=>{ if(drag&&drag.moved) suppressClick=true; drag=null; svg.classList.remove('dragging'); });
+svg.addEventListener('wheel',e=>{ e.preventDefault(); const r=svg.getBoundingClientRect();
+  const px=(e.clientX-r.left)/r.width*1520, py=(e.clientY-r.top)/r.height*960;
+  const nz=Math.min(2.4,Math.max(.5,S.zoom*(e.deltaY<0?1.12:.89)));
+  S.pan.x=px-(px-S.pan.x)*(nz/S.zoom); S.pan.y=py-(py-S.pan.y)*(nz/S.zoom); S.zoom=nz; applyTransform(); },{passive:false});
+
+/* ============================ CONTROLS ============================ */
+function sync(){
+  $('cTheme').value=S.theme; $('cAccent').value=S.accent; $('cZoom').value=Math.round(S.zoom*100);
+  $('cStroke').value=S.stroke; $('oStroke').textContent=S.stroke.toFixed(1);
+  $('cRadius').value=S.radius; $('oRadius').textContent=S.radius; $('cDensity').value=S.density;
+  for(const k of Object.keys(S.layers)){ const el=$('l'+k[0].toUpperCase()+k.slice(1)); el.checked=S.layers[k]; el.closest('.tg').classList.toggle('on',el.checked); }
+}
+$('cTheme').addEventListener('change',e=>{ S.theme=e.target.value; S.accent=THEMES[S.theme].access; sync(); render(); });
+$('cAccent').addEventListener('input',e=>{ S.accent=e.target.value; render(); });
+$('cZoom').addEventListener('input',e=>{ const nz=e.target.value/100, cx=760, cy=480; S.pan.x=cx-(cx-S.pan.x)*(nz/S.zoom); S.pan.y=cy-(cy-S.pan.y)*(nz/S.zoom); S.zoom=nz; applyTransform(); $('oZoom').textContent=e.target.value+'%'; });
+$('cStroke').addEventListener('input',e=>{ S.stroke=+e.target.value; $('oStroke').textContent=S.stroke.toFixed(1); render(); });
+$('cRadius').addEventListener('input',e=>{ S.radius=+e.target.value; $('oRadius').textContent=S.radius; render(); });
+$('cDensity').addEventListener('change',e=>{ S.density=e.target.value; render(); });
+for(const k of Object.keys(S.layers)){
+  $('l'+k[0].toUpperCase()+k.slice(1)).addEventListener('change',e=>{ S.layers[k]=e.target.checked; e.target.closest('.tg').classList.toggle('on',e.target.checked); if(pinned&&((pinned==='nas'&&!S.layers.backup)||(pinned==='qcloud'&&!S.layers.personal))){pinned=null;defaultDetail();} render(); });
+}
+function resetAll(){ S=JSON.parse(JSON.stringify(DEFAULTS)); pinned=null; sync(); render(); defaultDetail(); toast('Blueprint reset ↺'); }
+function shuffle(){
+  const keys=Object.keys(THEMES); S.theme=keys[Math.floor(Math.random()*keys.length)];
+  const pool=['#38d9ff','#f26bff','#ffb224','#3ddc97','#7c9cff','#ff5d6c','#66e0ff'];
+  S.accent=pool[Math.floor(Math.random()*pool.length)]; sync(); render(); toast('Palette shuffled ⚄');
+}
+
+/* ============================ EXPORT & COPY ============================ */
+function cleanClone(scale){
+  const c=svg.cloneNode(true); c.querySelectorAll('.dim,.hot').forEach(el=>el.classList.remove('dim','hot'));
+  c.setAttribute('xmlns','http://www.w3.org/2000/svg'); c.setAttribute('width',1520*(scale||1)); c.setAttribute('height',960*(scale||1));
+  c.removeAttribute('id'); c.removeAttribute('class'); c.style.cursor='default';
+  return c;
+}
+function svgText(scale){ return '<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(cleanClone(scale)); }
+function exportSVG(){ download('neo-horizons-blueprint-01.svg', new Blob([svgText(1)],{type:'image/svg+xml'})); toast('SVG exported — vector, deck-ready ✓'); }
+function exportPNG(){
+  const blob=new Blob([svgText(2)],{type:'image/svg+xml'}); const url=URL.createObjectURL(blob); const img=new Image();
+  img.onload=()=>{ const cv=document.createElement('canvas'); cv.width=3040; cv.height=1920; const ctx=cv.getContext('2d');
+    ctx.drawImage(img,0,0,3040,1920); URL.revokeObjectURL(url);
+    cv.toBlob(b=>{ download('neo-horizons-blueprint-01@2x.png',b); toast('PNG exported · 3040×1920 ✓'); },'image/png'); };
+  img.onerror=()=>{ URL.revokeObjectURL(url); toast('PNG failed — use SVG export instead'); };
+  img.src=url;
+}
+function copySVG(){ copyRaw(svgText(1),'SVG markup copied ✓'); }
+function copyMermaid(btn){ copyRaw(MERMAID,'Mermaid source copied ✓',btn); }
+function copyPrompt(btn){ copyRaw(PROMPT,'Full MCP prompt copied — paste into your agent ✓',btn); }
+function copyShare(btn){ copyRaw(SHARE,'Share caption copied — paste with your link ✓',btn); }
+function copyText(which,btn){ copyRaw(which==='cfg'?CFG:PROMPT,'Copied ✓',btn); }
+
+/* ============================ INIT ============================ */
+$('cfg').textContent=CFG;
+$('mermaidPre').textContent=MERMAID;
+sync(); render();
+const io=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){x.target.classList.add('seen'); io.unobserve(x.target);} }),{threshold:.12});
+document.querySelectorAll('.card').forEach(c=>io.observe(c));
+const secs=['blueprint','mcp','generate'].map(id=>$(id));
+const navLinks=[...document.querySelectorAll('nav a.nl')];
+const so=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+x.target.id)); } }),{rootMargin:'-40% 0px -55% 0px'});
+secs.forEach(s=>so.observe(s));
+</script>
+</body>
+</html>
